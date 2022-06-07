@@ -1,0 +1,33 @@
+<div class="container">
+
+    <nav class="navbar nav-light bg-primary">
+        <div class="container-fluid">
+            <h1 style="color: aliceblue"  >Home Page</h1>
+            <div class="d-flex">
+                <button type="button" class="btn btn-success" [routerLink]="'/applications'">Add Application</button>
+            </div>
+        </div>
+    </nav>
+    
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Application Number</th>
+            <th>Application Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+    <tbody>
+      <tr *ngFor="let application of application">
+        <td>{{application.applicationNumber}}</td>
+        <td>{{application.applicationType}}</td>
+        <td>{{application.amount}}</td>
+        <td>{{application.status}}</td>
+    
+        <button [routerLink]="'/applications/id:'" type="button" class="btn btn-success" (click)="onDetailsClick">Details</button>
+    
+      </tr>
+    </tbody>
+      </table>
+    </div>
