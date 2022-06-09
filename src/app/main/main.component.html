@@ -4,7 +4,7 @@
         <div class="container-fluid">
             <h1 style="color: aliceblue"  >Home Page</h1>
             <div class="d-flex">
-                <button type="button" class="btn btn-success" [routerLink]="'/applications'">Add Application</button>
+                <button type="button" class="btn btn-success" [routerLink]="'/application'">Add Application</button>
             </div>
         </div>
     </nav>
@@ -19,14 +19,12 @@
           </tr>
         </thead>
     <tbody>
-      <tr *ngFor="let application of application">
+      <tr *ngFor="let application of applicationList">
         <td>{{application.applicationNumber}}</td>
         <td>{{application.applicationType}}</td>
         <td>{{application.amount}}</td>
         <td>{{application.status}}</td>
-    
-        <button [routerLink]="'/applications/id:'" type="button" class="btn btn-success" (click)="onDetailsClick">Details</button>
-    
+        <a [routerLink]="['/application', application.applicationNumber]">Details</a> 
       </tr>
     </tbody>
       </table>

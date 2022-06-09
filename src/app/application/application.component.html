@@ -1,0 +1,174 @@
+<nav class="navbar nav-light bg-primary">
+  <div class="container-fluid">
+    <h1 style="color: aliceblue">Application Form</h1>
+    <div class="d-flex">
+      <button type="button" class="btn btn-success" [routerLink]="'/main'">Return Home</button>
+    </div>
+  </div>
+</nav>
+<div class="form" *ngIf="mode == 'read' && application">
+  <form [formGroup]="formValue">
+    <div class="form-group">
+      <label for="applicationNumber">Application Number:</label>
+      <input id="applicationNumber" type="number" class="form-control" value="{{application.applicationNumber}}"
+        readonly="readonly">
+      <label for="applicationType">Application Type:</label>
+      <input id="applicationType" type="name" class="form-control" value="{{application.applicationType}}"
+        readonly="readonly">
+      <label for="amount">Amount:</label>
+      <input id="amount" type="number" class="form-control" value="{{application.amount}}" readonly="readonly">
+      <label for="status">Status:</label>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio1"
+          value="{{application.status}}" [checked]="application.status == 'Active'" [disabled]="mode == 'read'">
+        <label class="form-check-label" for="inlineRadio1">Active</label>
+      </div>
+      <div class="form-check form-check-inline">
+        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio2"
+          value="{{application.status}}" [checked]="application.status == 'Inactive'" [disabled]="mode == 'read'">
+        <label class="form-check-label" for="inlineRadio2">Inactive</label>
+      </div>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>ID Type</th>
+          <th>Gender</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let applicant of application.applicants">
+          <td>{{applicant.name}}</td>
+          <td>{{applicant.identificationTypes}}</td>
+          <td>{{applicant.gender}}</td>
+          <td>
+            <div *ngIf="mode != 'read'">
+              <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+              <button type="button" class="btn btn-primary btn-sm mt-2"
+                style="color: white; background-color: blue;">Edit</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplication()">Delete</button>
+    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Edit</button>
+  </form>
+</div>
+
+
+<div class="form" *ngIf="mode == 'new'">
+  <form [formGroup]="formValue">
+    <div class="form-group">
+      <label for="applicationType">Application Type:</label>
+      <div class="radio">
+        <style>
+          select:invalid {
+            color: gray;
+          }
+        </style>
+        <select formControlName="applicationType" class="form-control">
+          <option value="">Please Select</option>
+          <option value="Home Loan">Home Loan</option>
+          <option value="Personal Loan">Personal Loan</option>
+          <option value="Business Loan">Business Loan</option>
+        </select>
+      </div>
+      <label for="amount">Amount:</label>
+      <input formControlName="amount" id="amount" type="number" class="form-control" required pattern="([0-9]{4,})">
+      <div *ngIf="amount">
+        <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
+          <div *ngIf="amount.errors?.['required']">
+            Amount is required.
+          </div>
+          <div *ngIf="amount.errors?.['pattern']">
+            Amount must be larger than 1000.
+          </div>
+        </div>
+      </div>
+      <label for="status">Status:</label>
+      <div class="form-check form--inline">
+        <input formControlName="status" class="form-check-input" type="radio" name="status" id="radio1" value="Active">
+        <label class="form-check-label" for="inlineRadio1">Active</label>
+      </div>
+      <div class="form-check form--inline">
+        <input formControlName="status" class="form-check-input" type="radio" name="status" id="radio2"
+          value="Inactive">
+        <label class="form-check-label" for="inlineRadio2">Inactive</label>
+      </div>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>ID Type</th>
+            <th>Gender</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let applicant of application?.applicants">
+            <td>{{applicant.name}}</td>
+            <td>{{applicant.identificationTypes}}</td>
+            <td>{{applicant.gender}}</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="form-group">
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" formControlName="name" required pattern="[a-zA-Z ]+" />
+        <div *ngIf="name">
+          <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+            <div *ngIf="name.errors?.['required']">
+              Name is required.
+            </div>
+            <div *ngIf="name.errors?.['pattern']">
+              Name must be in alphanumeric.
+            </div>
+          </div>
+        </div>
+        <label for="idType">Identification Type:</label>
+        <div>
+          <input type="checkbox" class="btn-check" name="identificationType" id="option1" autocomplete="off"
+            value="Australian Passport" [(ngModel)]="identificationTypesForm.australianPassport"
+            [ngModelOptions]="{standalone: true}">
+          <label class="btn btn-outline-success" for="option1">Australian Passport</label>
+
+          <input type="checkbox" class="btn-check" name="identificationType" id="option2" autocomplete="off"
+            value="Driver License" [(ngModel)]="identificationTypesForm.driverLicense"
+            [ngModelOptions]="{standalone: true}">
+          <label class="btn btn-outline-success" for="option2">Driver License</label>
+
+          <input type="checkbox" class="btn-check" name="identificationType" id="option3" autocomplete="off"
+            value="Foreign Passport" [(ngModel)]="identificationTypesForm.foreignPassport"
+            [ngModelOptions]="{standalone: true}">
+          <label class="btn btn-outline-success" for="option3">Foreign Passport</label>
+
+          <input type="checkbox" class="btn-check" name="identificationType" id="option4" autocomplete="off"
+            value="Foreign ID Card" [(ngModel)]="identificationTypesForm.foreignIdCard"
+            [ngModelOptions]="{standalone: true}">
+          <label class="btn btn-outline-success" for="option4">Foreign ID Card</label>
+        </div>
+
+      </div>
+      <div class="form-group">
+        <label>Gender</label>
+        <style>
+          select:invalid {
+            color: gray;
+          }
+        </style>
+        <select formControlName="gender" class="form-control">
+          <option value="">Please Select</option>
+          <option value="Male">Male</option>
+          <option value="Female">Female</option>
+          <option value="Not Disclosed">Not Disclosed</option>
+        </select>
+      </div>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Add</button>
+    </div>
+    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
+    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
+      (click)="createNewApplication()" [routerLink]="['/main']">Save</button>
+  </form>
+</div>
