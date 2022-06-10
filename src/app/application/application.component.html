@@ -87,13 +87,13 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let applicant of application.applicants">
+        <tr *ngFor="let applicant of application.applicants; let applicantIndex = index;">
           <td>{{applicant.name}}</td>
           <td>{{applicant.identificationTypes}}</td>
           <td>{{applicant.gender}}</td>
           <td>
-            <div *ngIf="mode == 'edit'">
-              <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplicant()">Deletewewe</button>
+            <div *ngIf="mode != 'read'">
+              <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplicant(applicantIndex)">Remove</button>
               <button type="button" class="btn btn-primary btn-sm mt-2"
                 style="color: white; background-color: blue;">Edit</button>
             </div>
@@ -174,12 +174,12 @@
     <div *ngIf="mode == 'new'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
-        (click)="createNewApplication()">Save</button>
+        (click)="createNewApplication()">Submit</button>
     </div>
     <div *ngIf="mode == 'edit'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
-        (click)="updateApplication()">Update</button>
+        (click)="updateApplication()">Save</button>
     </div>
   </form>
 </div>
