@@ -1,3 +1,4 @@
+<h1>{{mode}}</h1>
 <nav class="navbar nav-light bg-primary">
   <div class="container-fluid">
     <h1 style="color: aliceblue">Application Form</h1>
@@ -6,26 +7,73 @@
     </div>
   </div>
 </nav>
-<div class="form" *ngIf="mode == 'read' && application">
+<div class="form">
   <form [formGroup]="formValue">
     <div class="form-group">
-      <label for="applicationNumber">Application Number:</label>
-      <input id="applicationNumber" type="number" class="form-control" value="{{application.applicationNumber}}"
-        readonly="readonly">
-      <label for="applicationType">Application Type:</label>
-      <input id="applicationType" type="name" class="form-control" value="{{application.applicationType}}"
-        readonly="readonly">
+      <div *ngIf="mode != 'new'">
+        <label for="applicationNumber">Application Number:</label>
+        <input id="applicationNumber" type="number" class="form-control" value="{{application.applicationNumber}}"
+          [readonly]="mode != 'new'">
+      </div>
+    </div>
+    <label for="applicationType">Application Type:</label>
+    <div class="radio">
+      <style>
+        select:invalid {
+          color: gray;
+        }
+      </style>
+      <select formControlName="applicationType" class="form-control" id="applicationType" required
+        [attr.disabled]="mode == 'read' ? 'disabled' : null">
+        <option value="">Please Select</option>
+        <option value="Home Loan" [selected]="application.applicationType == 'Home Loan'">Home Loan</option>
+        <option value="Personal Loan" [selected]="application.applicationType == 'Personal Loan'">Personal Loan</option>
+        <option value="Business Loan" [selected]="application.applicationType == 'Business Loan'">Business Loan</option>
+      </select>
+      <div *ngIf="applicationType">
+        <div *ngIf="applicationType.invalid && (applicationType.dirty || applicationType.touched)"
+          class="alert alert-danger">
+          <div *ngIf="applicationType.errors?.['required']">
+            Please select an application type.
+          </div>
+        </div>
+      </div>
+
+      <!-- <div *ngIf="mode == 'read'" >
+        <label for="amount">Amount:</label>
+        <input id="amount" type="number" class="form-control" value="{{application.amount}}" [readonly]="mode == 'read'"
+          required pattern="([0-9]{4,})">
+        <div *ngIf="amount">
+          <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
+            <div *ngIf="amount.errors?.['required']">
+              Amount is required.
+            </div>
+            <div *ngIf="amount.errors?.['pattern']">
+              Amount must be larger than 1000.
+            </div>
+          </div>
+        </div>
+      </div> -->
       <label for="amount">Amount:</label>
-      <input id="amount" type="number" class="form-control" value="{{application.amount}}" readonly="readonly">
+      <input id="amount" type="number" class="form-control" [readonly]="mode == 'read'"
+        required pattern="([0-9]{4,})" formControlName="amount">
+      <div *ngIf="amount">
+        <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
+          <div *ngIf="amount.errors?.['required']">
+            Amount is required.
+          </div>
+          <div *ngIf="amount.errors?.['pattern']">
+            Amount must be larger than 1000.
+          </div>
+        </div>
+      </div>
       <label for="status">Status:</label>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio1"
-          value="{{application.status}}" [checked]="application.status == 'Active'" [disabled]="mode == 'read'">
+        <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status" value="Active" [checked]="application.status == 'Active'" [disabled]="mode == 'read'">
         <label class="form-check-label" for="inlineRadio1">Active</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="inlineRadioOptions" id="radio2"
-          value="{{application.status}}" [checked]="application.status == 'Inactive'" [disabled]="mode == 'read'">
+        <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status" value="Inactive" [checked]="application.status == 'Inactive'" [disabled]="mode == 'read'">
         <label class="form-check-label" for="inlineRadio2">Inactive</label>
       </div>
     </div>
@@ -44,8 +92,8 @@
           <td>{{applicant.identificationTypes}}</td>
           <td>{{applicant.gender}}</td>
           <td>
-            <div *ngIf="mode != 'read'">
-              <button type="button" class="btn btn-danger btn-sm mt-2">Delete</button>
+            <div *ngIf="mode == 'edit'">
+              <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplicant()">Deletewewe</button>
               <button type="button" class="btn btn-primary btn-sm mt-2"
                 style="color: white; background-color: blue;">Edit</button>
             </div>
@@ -53,104 +101,55 @@
         </tr>
       </tbody>
     </table>
-    <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplication()">Delete</button>
-    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Edit</button>
+    <div *ngIf="mode == 'read'">
+      <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplication()">Delete</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="editApplication()">Edit</button>
+    </div>
   </form>
 </div>
 
 
-<div class="form" *ngIf="mode == 'new'">
+<div class="form" *ngIf="mode != 'read'">
   <form [formGroup]="formValue">
     <div class="form-group">
-      <label for="applicationType">Application Type:</label>
-      <div class="radio">
-        <style>
-          select:invalid {
-            color: gray;
-          }
-        </style>
-        <select formControlName="applicationType" class="form-control">
-          <option value="">Please Select</option>
-          <option value="Home Loan">Home Loan</option>
-          <option value="Personal Loan">Personal Loan</option>
-          <option value="Business Loan">Business Loan</option>
-        </select>
-      </div>
-      <label for="amount">Amount:</label>
-      <input formControlName="amount" id="amount" type="number" class="form-control" required pattern="([0-9]{4,})">
-      <div *ngIf="amount">
-        <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
-          <div *ngIf="amount.errors?.['required']">
-            Amount is required.
+      <label for="name">Name:</label>
+      <input type="text" class="form-control" id="name" formControlName="name" required pattern="[a-zA-Z ]+" />
+      <div *ngIf="name">
+        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+          <div *ngIf="name.errors?.['required']">
+            Name is required.
           </div>
-          <div *ngIf="amount.errors?.['pattern']">
-            Amount must be larger than 1000.
+          <div *ngIf="name.errors?.['pattern']">
+            Name must be in alphanumeric.
           </div>
         </div>
       </div>
-      <label for="status">Status:</label>
-      <div class="form-check form--inline">
-        <input formControlName="status" class="form-check-input" type="radio" name="status" id="radio1" value="Active">
-        <label class="form-check-label" for="inlineRadio1">Active</label>
+      <label for="idType">Identification Type:</label>
+      <div>
+        <input type="checkbox" class="btn-check" name="identificationType" id="option1" autocomplete="off"
+          value="Australian Passport" [(ngModel)]="identificationTypesForm.australianPassport"
+          [ngModelOptions]="{standalone: true}">
+        <label class="btn btn-outline-success" for="option1">Australian Passport</label>
+
+        <input type="checkbox" class="btn-check" name="identificationType" id="option2" autocomplete="off"
+          value="Driver License" [(ngModel)]="identificationTypesForm.driverLicense"
+          [ngModelOptions]="{standalone: true}">
+        <label class="btn btn-outline-success" for="option2">Driver License</label>
+
+        <input type="checkbox" class="btn-check" name="identificationType" id="option3" autocomplete="off"
+          value="Foreign Passport" [(ngModel)]="identificationTypesForm.foreignPassport"
+          [ngModelOptions]="{standalone: true}">
+        <label class="btn btn-outline-success" for="option3">Foreign Passport</label>
+
+        <input type="checkbox" class="btn-check" name="identificationType" id="option4" autocomplete="off"
+          value="Foreign ID Card" [(ngModel)]="identificationTypesForm.foreignIdCard"
+          [ngModelOptions]="{standalone: true}">
+        <label class="btn btn-outline-success" for="option4">Foreign ID Card</label>
       </div>
-      <div class="form-check form--inline">
-        <input formControlName="status" class="form-check-input" type="radio" name="status" id="radio2"
-          value="Inactive">
-        <label class="form-check-label" for="inlineRadio2">Inactive</label>
-      </div>
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>ID Type</th>
-            <th>Gender</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr *ngFor="let applicant of application?.applicants">
-            <td>{{applicant.name}}</td>
-            <td>{{applicant.identificationTypes}}</td>
-            <td>{{applicant.gender}}</td>
-          </tr>
-        </tbody>
-      </table>
-      <div class="form-group">
-        <label for="name">Name:</label>
-        <input type="text" class="form-control" id="name" formControlName="name" required pattern="[a-zA-Z ]+" />
-        <div *ngIf="name">
-          <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
-            <div *ngIf="name.errors?.['required']">
-              Name is required.
-            </div>
-            <div *ngIf="name.errors?.['pattern']">
-              Name must be in alphanumeric.
-            </div>
-          </div>
-        </div>
-        <label for="idType">Identification Type:</label>
-        <div>
-          <input type="checkbox" class="btn-check" name="identificationType" id="option1" autocomplete="off"
-            value="Australian Passport" [(ngModel)]="identificationTypesForm.australianPassport"
-            [ngModelOptions]="{standalone: true}">
-          <label class="btn btn-outline-success" for="option1">Australian Passport</label>
 
-          <input type="checkbox" class="btn-check" name="identificationType" id="option2" autocomplete="off"
-            value="Driver License" [(ngModel)]="identificationTypesForm.driverLicense"
-            [ngModelOptions]="{standalone: true}">
-          <label class="btn btn-outline-success" for="option2">Driver License</label>
+    </div>
+    <div *ngIf=gender>
 
-          <input type="checkbox" class="btn-check" name="identificationType" id="option3" autocomplete="off"
-            value="Foreign Passport" [(ngModel)]="identificationTypesForm.foreignPassport"
-            [ngModelOptions]="{standalone: true}">
-          <label class="btn btn-outline-success" for="option3">Foreign Passport</label>
-
-          <input type="checkbox" class="btn-check" name="identificationType" id="option4" autocomplete="off"
-            value="Foreign ID Card" [(ngModel)]="identificationTypesForm.foreignIdCard"
-            [ngModelOptions]="{standalone: true}">
-          <label class="btn btn-outline-success" for="option4">Foreign ID Card</label>
-        </div>
-
-      </div>
       <div class="form-group">
         <label>Gender</label>
         <style>
@@ -165,10 +164,22 @@
           <option value="Not Disclosed">Not Disclosed</option>
         </select>
       </div>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Add</button>
+      <div *ngIf="gender.invalid && (gender.dirty || gender.touched)" class="alert alert-danger">
+        <div *ngIf="gender.errors?.['required']">
+          Please select a gender option.
+        </div>
+      </div>
     </div>
-    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
-    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
-      (click)="createNewApplication()" [routerLink]="['/main']">Save</button>
+    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add</button>
+    <div *ngIf="mode == 'new'">
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
+        (click)="createNewApplication()">Save</button>
+    </div>
+    <div *ngIf="mode == 'edit'">
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
+        (click)="updateApplication()">Update</button>
+    </div>
   </form>
 </div>

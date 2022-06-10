@@ -31,7 +31,7 @@ export class ApplicationService {
         }
       }
     }
-    return null;
+    return <Application>{};
   }
 
   addApplication(application: Application) {
@@ -42,6 +42,7 @@ export class ApplicationService {
       applications.push(application);
       this.saveToStorage(applications);
     }
+    return application.applicationNumber;
   }
 
   updateApplication(updatedApplication: Application) {
@@ -74,15 +75,20 @@ export class ApplicationService {
 
   }
 
-  deleteApplicant(applicants: string) {
-    let applicant = this.retrieveFromStorage();
-    if (applicant != null) {
-      for (let i = 0; i < applicant.length; i++ ) {
-        let application = applicant[5];
+  deleteApplicant(){
+    let applications = this.retrieveFromStorage();
+    if (applications != null) {
+      for (let i = 0; i < applications.length; i++) {
+        let application = applications[i];
+        console.log(i)
+        if (application.applicants == application.applicants) {
+          application.applicants.splice(i, 1,);
+          this.saveToStorage(applications);
+          break
       }
     }
-
   }
+}
 
   
   private saveToStorage(applications: Application[]) {
