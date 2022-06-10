@@ -40,9 +40,9 @@ export class ApplicationComponent implements OnInit {
 
   ngOnInit(): void {
     this.formValue = this.formbuilder.group({
-      applicationType: [''],  
+      applicationType: [null, [Validators.required]],  
       amount: [null, [Validators.required, Validators.pattern('([0-9]{4,})')]],
-      status: [''],
+      status: ['', [Validators.required]],
       name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]+')]],
       identificationTypes: [''],
       gender: ['', [Validators.required]]
@@ -59,7 +59,15 @@ export class ApplicationComponent implements OnInit {
     }
     return this.formValue.get('amount'); 
   }
-  get applicationType() {return this.formValue.get('applicationType');}
+
+  get applicationType() {
+    let formApplicationType = this.formValue.controls['applicationType'].value;
+    if (formApplicationType == null){
+      this.formValue.controls['applicationType'].setValue(this.application.applicationType);
+    }
+    return this.formValue.get('applicationType');
+  }
+  
   get gender() {return this.formValue.get('gender');}
 
   loadApplication(formValue: FormGroup) {
@@ -87,7 +95,8 @@ export class ApplicationComponent implements OnInit {
       applicants: this.application.applicants
     };
     let applicationNumber = this.applicationService.updateApplication(updatedApplication);
-    console.log(applicationNumber);
+    console.log(this.applicationType);
+    console.log(updatedApplication)
     this.mode = "read"
     this.router.navigate(['/application/', applicationNumber]);
 
@@ -122,9 +131,8 @@ export class ApplicationComponent implements OnInit {
     }
   }
 
-  deleteApplicant() {
-    this.applicationService.deleteApplicant()
-
+  deleteApplicant(applicantIndex: number) {
+    this.application.applicants.splice(applicantIndex, 1);
   }
 
   editApplication() {

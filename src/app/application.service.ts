@@ -75,20 +75,20 @@ export class ApplicationService {
 
   }
 
-  deleteApplicant(){
-    let applications = this.retrieveFromStorage();
-    if (applications != null) {
-      for (let i = 0; i < applications.length; i++) {
-        let application = applications[i];
-        console.log(i)
-        if (application.applicants == application.applicants) {
-          application.applicants.splice(i, 1,);
-          this.saveToStorage(applications);
-          break
-      }
-    }
-  }
-}
+//   deleteApplicant(applicantposition: number){
+//     let applications = this.retrieveFromStorage();
+//     if (applications != null) {
+//       for (let i = 0; i < applications.length; i++) {
+//         let application = applications[i];
+//         console.log(i)
+//         if (application.applicants == application.applicants) {
+//           application.applicants.splice(i, 1,);
+//           this.saveToStorage(applications);
+//           break
+//       }
+//     }
+//   }
+// }
 
   
   private saveToStorage(applications: Application[]) {
