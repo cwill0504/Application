@@ -1,3 +1,4 @@
+
 <h1>{{mode}}</h1>
 <nav class="navbar nav-light bg-primary">
   <div class="container-fluid">
@@ -23,7 +24,7 @@
           color: gray;
         }
       </style>
-      <select formControlName="applicationType" class="form-control" id="applicationType" required
+      <select formControlName="applicationType" class="form-control" id="applicationType"
         [attr.disabled]="mode == 'read' ? 'disabled' : null">
         <option value="">Please Select</option>
         <option value="Home Loan" [selected]="application.applicationType == 'Home Loan'">Home Loan</option>
@@ -56,7 +57,7 @@
       </div> -->
       <label for="amount">Amount:</label>
       <input id="amount" type="number" class="form-control" [readonly]="mode == 'read'"
-        required pattern="([0-9]{4,})" formControlName="amount">
+        formControlName="amount">
       <div *ngIf="amount">
         <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
           <div *ngIf="amount.errors?.['required']">
@@ -69,11 +70,13 @@
       </div>
       <label for="status">Status:</label>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status" value="Active" [checked]="application.status == 'Active'" [disabled]="mode == 'read'">
+        <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status" value="Active"
+          [checked]="application.status == 'Active'" [disabled]="mode == 'read'">
         <label class="form-check-label" for="inlineRadio1">Active</label>
       </div>
       <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status" value="Inactive" [checked]="application.status == 'Inactive'" [disabled]="mode == 'read'">
+        <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status" value="Inactive"
+          [checked]="application.status == 'Inactive'" [disabled]="mode == 'read'">
         <label class="form-check-label" for="inlineRadio2">Inactive</label>
       </div>
     </div>
@@ -93,9 +96,10 @@
           <td>{{applicant.gender}}</td>
           <td>
             <div *ngIf="mode != 'read'">
-              <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplicant(applicantIndex)">Remove</button>
-              <button type="button" class="btn btn-primary btn-sm mt-2"
-                style="color: white; background-color: blue;">Edit</button>
+              <button type="button" class="btn btn-danger btn-sm mt-2"
+                (click)="deleteApplicant(applicantIndex)">Remove</button>
+              <button type="button" class="btn btn-primary btn-sm mt-2" style="color: white; background-color: blue;"
+                (click)="editApplicant(applicantIndex)">Edit</button>
             </div>
           </td>
         </tr>
@@ -113,7 +117,7 @@
   <form [formGroup]="formValue">
     <div class="form-group">
       <label for="name">Name:</label>
-      <input type="text" class="form-control" id="name" formControlName="name" required pattern="[a-zA-Z ]+" />
+      <input type="text" class="form-control" id="name" formControlName="name" />
       <div *ngIf="name">
         <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
           <div *ngIf="name.errors?.['required']">
@@ -132,9 +136,9 @@
         <label class="btn btn-outline-success" for="option1">Australian Passport</label>
 
         <input type="checkbox" class="btn-check" name="identificationType" id="option2" autocomplete="off"
-          value="Driver License" [(ngModel)]="identificationTypesForm.driverLicense"
+          value="Driver Licence" [(ngModel)]="identificationTypesForm.driverLicense"
           [ngModelOptions]="{standalone: true}">
-        <label class="btn btn-outline-success" for="option2">Driver License</label>
+        <label class="btn btn-outline-success" for="option2">Driver Licence</label>
 
         <input type="checkbox" class="btn-check" name="identificationType" id="option3" autocomplete="off"
           value="Foreign Passport" [(ngModel)]="identificationTypesForm.foreignPassport"
@@ -170,15 +174,20 @@
         </div>
       </div>
     </div>
-    <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add</button>
+    <div *ngIf="mode == 'edit' || mode == 'new' ">
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add Applicant</button>
+    </div>
+    <div *ngIf="mode == 'editApplicant'">
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
+    </div>
     <div *ngIf="mode == 'new'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
-        (click)="createNewApplication()">Submit</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Back</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" 
+        (click)="createNewApplication()" [disabled]="!formValue.valid">Submit</button>
     </div>
     <div *ngIf="mode == 'edit'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update">Back</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" value="update"
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2"  >Back</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" [disabled]="!formValue.valid"
         (click)="updateApplication()">Save</button>
     </div>
   </form>

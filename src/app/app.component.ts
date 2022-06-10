@@ -21,6 +21,6 @@ interface Applicant {
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-title = "LocalStorage"
+title = "Loan Application"
   
 }
