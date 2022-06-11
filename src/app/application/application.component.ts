@@ -30,6 +30,7 @@ export class ApplicationComponent implements OnInit {
     foreignIdCard: false
   }
   editApplicantIndex = -1;
+  identificationTypes = ["Australian Passport", "Driver Licence", "Foreign Passport", "Foreign ID Card"]
 
   ngOnInit(): void {
     this.formValue = this.formbuilder.group({
@@ -197,4 +198,3 @@ export class ApplicationComponent implements OnInit {
     }
   }
 }
-

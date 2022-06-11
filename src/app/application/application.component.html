@@ -1,4 +1,3 @@
-
 <h1>{{mode}}</h1>
 <nav class="navbar nav-light bg-primary">
   <div class="container-fluid">
@@ -56,8 +55,7 @@
         </div>
       </div> -->
       <label for="amount">Amount:</label>
-      <input id="amount" type="number" class="form-control" [readonly]="mode == 'read'"
-        formControlName="amount">
+      <input id="amount" type="number" class="form-control" [readonly]="mode == 'read'" formControlName="amount">
       <div *ngIf="amount">
         <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
           <div *ngIf="amount.errors?.['required']">
@@ -128,27 +126,11 @@
           </div>
         </div>
       </div>
-      <label for="idType">Identification Type:</label>
-      <div>
-        <input type="checkbox" class="btn-check" name="identificationType" id="option1" autocomplete="off"
-          value="Australian Passport" [(ngModel)]="identificationTypesForm.australianPassport"
-          [ngModelOptions]="{standalone: true}">
-        <label class="btn btn-outline-success" for="option1">Australian Passport</label>
-
-        <input type="checkbox" class="btn-check" name="identificationType" id="option2" autocomplete="off"
-          value="Driver Licence" [(ngModel)]="identificationTypesForm.driverLicense"
-          [ngModelOptions]="{standalone: true}">
-        <label class="btn btn-outline-success" for="option2">Driver Licence</label>
-
-        <input type="checkbox" class="btn-check" name="identificationType" id="option3" autocomplete="off"
-          value="Foreign Passport" [(ngModel)]="identificationTypesForm.foreignPassport"
-          [ngModelOptions]="{standalone: true}">
-        <label class="btn btn-outline-success" for="option3">Foreign Passport</label>
-
-        <input type="checkbox" class="btn-check" name="identificationType" id="option4" autocomplete="off"
-          value="Foreign ID Card" [(ngModel)]="identificationTypesForm.foreignIdCard"
-          [ngModelOptions]="{standalone: true}">
-        <label class="btn btn-outline-success" for="option4">Foreign ID Card</label>
+      <div><label for="idType">Identification Type:</label></div>
+      <div *ngFor="let identificationType of identificationTypes; let i = index" formArrayName="identificationTypes"
+        style="display:inline">
+        <input type="checkbox" class="btn-check" [formControlName]="i" id="option{{i}}">
+        <label class="btn btn-outline-success" for="option{{i}}">{{identificationType}}</label>
       </div>
 
     </div>
@@ -175,18 +157,20 @@
       </div>
     </div>
     <div *ngIf="mode == 'edit' || mode == 'new' ">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add Applicant</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add
+        Applicant</button>
     </div>
     <div *ngIf="mode == 'editApplicant'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2"
+        (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
     </div>
     <div *ngIf="mode == 'new'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Back</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" 
-        (click)="createNewApplication()" [disabled]="!formValue.valid">Submit</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="createNewApplication()"
+        [disabled]="!formValue.valid">Submit</button>
     </div>
     <div *ngIf="mode == 'edit'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2"  >Back</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Back</button>
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" [disabled]="!formValue.valid"
         (click)="updateApplication()">Save</button>
     </div>
