@@ -68,12 +68,12 @@
       <label for="status">Status:</label>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status" value="Active"
-          [checked]="application.status == 'Active'" [disabled]="applicationMode == 'read'">
-        <label class="form-check-label" for="inlineRadio1">Active</label>
+          [checked]="application.status == 'Active'" [attr.disabled]="applicationMode == 'read'">
+          <label class="form-check-label" for="inlineRadio1">Active</label>
       </div>
       <div class="form-check form-check-inline">
         <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status" value="Inactive"
-          [checked]="application.status == 'Inactive'" [disabled]="applicationMode == 'read'">
+          [checked]="application.status == 'Inactive'" [attr.disabled]="applicationMode == 'read'">
         <label class="form-check-label" for="inlineRadio2">Inactive</label>
       </div>
     </div>
@@ -95,7 +95,7 @@
           <td>{{applicant.gender}}</td>
           <td>
             <!-- Existing Applicant Action Buttons -->
-            <div *ngIf="applicationMode == 'new'">
+            <div *ngIf="applicationMode == 'new' || applicationMode == 'edit'">
               <button type="button" class="btn btn-primary btn-sm mt-2" style="color: white; background-color: blue;"
                 (click)="editApplicant(applicantIndex)">Edit</button>
               <button type="button" class="btn btn-danger btn-sm mt-2"
@@ -164,13 +164,13 @@
     <div *ngIf="applicantMode == 'new' ">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add
         Applicant</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Cancel Applicant</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel Applicant</button>
 
     </div>
     <div *ngIf="applicantMode == 'edit'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2"
         (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Cancel Applicant</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel Applicant</button>
 
     </div>
 

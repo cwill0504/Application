@@ -68,15 +68,21 @@ export class ApplicationComponent implements OnInit {
     console.log(this.applicationNumber)
 
     if (this.applicationNumber != null) {
+      // View application
       this.application = this.applicationService.getApplication(Number(this.applicationNumber));
       formValue.controls['status'].setValue(this.application.status);
+      // formValue.controls['status'].disable;
 
       this.applicationMode = 'read';
       this.applicantMode = 'read';
     } else {
+      // New application
       this.applicationMode = 'new';
       this.applicantMode = 'read';
+      // formValue.controls['status'].enable;
     }
+
+    this.disableApplicantFormValidators();
   }
 
   /*
@@ -115,8 +121,6 @@ export class ApplicationComponent implements OnInit {
   editApplication() {
     this.applicationMode = 'edit'
     // this.applicantMode = 'read'
-    this.formValue.controls['name'].setValidators(Validators.nullValidator);
-    this.formValue.controls['gender'].setValidators(Validators.nullValidator);
   }
 
   deleteApplication() {
@@ -131,19 +135,14 @@ export class ApplicationComponent implements OnInit {
   */
   newApplicant() {
     this.applicantMode = 'new';
+    this.enableApplicantFormValidators();
   }
 
   addApplicant() {
     this.application.applicants.push(this.getApplicantFromForm());
-    this.resetApplicantForm();
     this.applicantMode = 'read';
-  }
-
-  updateApplicant(applicantIndex: number) {
-    this.application.applicants.splice(applicantIndex, 1, this.getApplicantFromForm())
-    this.applicantMode = 'read'
-    this.editApplicantIndex = -1;
-    this.resetApplicantForm();
+    //this.resetApplicantForm();
+    this.disableApplicantFormValidators();
   }
 
   editApplicant(applicantIndex: number) {
@@ -164,16 +163,43 @@ export class ApplicationComponent implements OnInit {
 
     this.formValue.controls['gender'].setValue(editApplicant.gender);
     this.editApplicantIndex = applicantIndex;
+    this.enableApplicantFormValidators();
   }
 
+  updateApplicant(applicantIndex: number) {
+    this.application.applicants.splice(applicantIndex, 1, this.getApplicantFromForm())
+    this.applicantMode = 'read'
+    this.editApplicantIndex = -1;
+    //this.resetApplicantForm();
+    this.disableApplicantFormValidators();
+  }
+  
   deleteApplicant(applicantIndex: number) {
     this.application.applicants.splice(applicantIndex, 1);
+  }
+
+  cancelApplicant() {
+    this.applicantMode = 'read'
+    this.disableApplicantFormValidators();
+    console.log("this.cancelApplicant")
+  }
+  
+  private enableApplicantFormValidators() {
+      // identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
+      this.formValue.controls['name'].setValidators([Validators.required,Validators.pattern('[a-zA-Z ]+')]);
+      // this.formValue.controls['identificationtypes'].setValidators(Validators.required);
+      this.formValue.controls['gender'].setValidators(Validators.required);
+  }
+
+  private disableApplicantFormValidators() {
+    this.formValue.controls['name'].setValidators(Validators.nullValidator);
+    // this.formValue.controls['identificationtypes'].setValidators(Validators.nullValidator);
+    this.formValue.controls['gender'].setValidators(Validators.nullValidator);
   }
 
   private resetApplicantForm() {
     this.formValue.controls['name'].reset()
     this.formValue.controls['identificationTypes'].reset();
-
     this.formValue.controls['gender'].reset();
   }
 
@@ -194,15 +220,4 @@ export class ApplicationComponent implements OnInit {
 
     return applicant
   }
-
-  /*
-  *=========================================
-  * Save application into backend
-  *=========================================
-  */
-  // saveChanges() {
-  //   if (this.application != null) {
-  //     this.applicationService.saveUpdatedApplication(this.application);
-  //   }
-  // }
 }
