@@ -1,31 +1,31 @@
 <div class="container">
+  <nav class="navbar nav-light bg-primary">
+    <div class="container-fluid">
+      <h1 style="color: aliceblue">Loan Application</h1>
+      <div class="d-flex">
+        <button type="button" class="btn btn-success" [routerLink]="'/application'">New Application</button>
+      </div>
+    </div>
+  </nav>
 
-    <nav class="navbar nav-light bg-primary">
-        <div class="container-fluid">
-            <h1 style="color: aliceblue"  >Home Page</h1>
-            <div class="d-flex">
-                <button type="button" class="btn btn-success" [routerLink]="'/application'">Add Application</button>
-            </div>
-        </div>
-    </nav>
-    
-      <table class="table">
-        <thead>
-          <tr>
-            <th>Application Number</th>
-            <th>Application Type</th>
-            <th>Amount</th>
-            <th>Status</th>
-          </tr>
-        </thead>
+  <!-- Application List -->
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Application Number</th>
+        <th>Application Type</th>
+        <th>Amount</th>
+        <th>Status</th>
+      </tr>
+    </thead>
     <tbody>
       <tr *ngFor="let application of applicationList">
         <td>{{application.applicationNumber}}</td>
         <td>{{application.applicationType}}</td>
         <td>{{application.amount}}</td>
         <td>{{application.status}}</td>
-        <a [routerLink]="['/application', application.applicationNumber]">Details</a> 
+        <a [routerLink]="['/application', application.applicationNumber]">Details</a>
       </tr>
     </tbody>
-      </table>
-    </div>
+  </table>
+</div>
