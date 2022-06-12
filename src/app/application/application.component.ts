@@ -124,9 +124,19 @@ export class ApplicationComponent implements OnInit {
   }
 
   deleteApplication() {
-    this.applicationService.deleteApplication(Number(this.applicationNumber));
+    if (confirm("Are you sure you wish to delete Application Number:  " + this.applicationNumber + "?")) {
+      console.log("Implement delete functionality here");
+      this.applicationService.deleteApplication(Number(this.applicationNumber));
+      this.router.navigate(['main'])
+    }
   }
 
+  cancelApplication() {
+    if (confirm("Are you sure you wish to cancel? Any inputs or updates will not be saved.")) {
+      console.log("Implement delete functionality here");
+      this.router.navigate(['main'])
+    }
+  }
 
   /*
   *=========================================
@@ -139,10 +149,16 @@ export class ApplicationComponent implements OnInit {
   }
 
   addApplicant() {
-    this.application.applicants.push(this.getApplicantFromForm());
-    this.applicantMode = 'read';
-    //this.resetApplicantForm();
-    this.disableApplicantFormValidators();
+    let newApplicant = this.getApplicantFromForm();
+
+    if (this.isNewApplicantNameDuplicate(newApplicant.name)) {
+      alert("Duplicate applicant name: " + newApplicant.name);
+    } else {
+      this.application.applicants.push(this.getApplicantFromForm());
+      this.applicantMode = 'read';
+      //this.resetApplicantForm();
+      this.disableApplicantFormValidators();
+    }
   }
 
   editApplicant(applicantIndex: number) {
@@ -167,33 +183,42 @@ export class ApplicationComponent implements OnInit {
   }
 
   updateApplicant(applicantIndex: number) {
-    this.application.applicants.splice(applicantIndex, 1, this.getApplicantFromForm())
-    this.applicantMode = 'read'
-    this.editApplicantIndex = -1;
-    //this.resetApplicantForm();
-    this.disableApplicantFormValidators();
+    let updateApplicant = this.getApplicantFromForm();
+
+    if (this.isUpdateApplicantNameDuplicate(applicantIndex, updateApplicant.name)) {
+      alert("Duplicate applicant name: " + updateApplicant.name);
+    } else {
+      this.application.applicants.splice(applicantIndex, 1, this.getApplicantFromForm())
+      this.applicantMode = 'read'
+      this.editApplicantIndex = -1;
+      //this.resetApplicantForm();
+      this.disableApplicantFormValidators();
+    }
   }
-  
+
   deleteApplicant(applicantIndex: number) {
-    this.application.applicants.splice(applicantIndex, 1);
+    if (confirm("Are you sure you wish to delete this applicant?")) {
+      this.application.applicants.splice(applicantIndex, 1);
+    }
   }
 
   cancelApplicant() {
-    this.applicantMode = 'read'
-    this.disableApplicantFormValidators();
-    console.log("this.cancelApplicant")
+    if (confirm("Are you sure you wish to cancel? Any inputs or updates will not be saved.")) {
+      this.applicantMode = 'read'
+      this.disableApplicantFormValidators();
+    }
   }
 
-  onIdentificationTypesChanged(identificationTypes : boolean[]) {
+  onIdentificationTypesChanged(identificationTypes: boolean[]) {
     console.log("Parent=" + identificationTypes)
     this.formValue.controls['identificationTypes'].setValue(identificationTypes);
   }
-  
+
   private enableApplicantFormValidators() {
-      // identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
-      this.formValue.controls['name'].setValidators([Validators.required,Validators.pattern('[a-zA-Z ]+')]);
-      // this.formValue.controls['identificationtypes'].setValidators(Validators.required);
-      this.formValue.controls['gender'].setValidators(Validators.required);
+    // identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
+    this.formValue.controls['name'].setValidators([Validators.required, Validators.pattern('[a-zA-Z ]+')]);
+    // this.formValue.controls['identificationtypes'].setValidators(Validators.required);
+    this.formValue.controls['gender'].setValidators(Validators.required);
   }
 
   private disableApplicantFormValidators() {
@@ -223,6 +248,15 @@ export class ApplicationComponent implements OnInit {
       }
     }
 
-    return applicant
+    return applicant;
+  }
+
+  private isNewApplicantNameDuplicate(name: string) {
+    return this.application.applicants.find(applicant => applicant.name.trim().toLocaleLowerCase() == name.trim().toLowerCase());
+  }
+
+  private isUpdateApplicantNameDuplicate(applicantIndex: number, name: string) {
+    let matchedApplicantIndex = this.application.applicants.findIndex(applicant => applicant.name.trim().toLocaleLowerCase() == name.trim().toLowerCase());
+    return (matchedApplicantIndex == -1 ? false : matchedApplicantIndex != applicantIndex);
   }
 }
