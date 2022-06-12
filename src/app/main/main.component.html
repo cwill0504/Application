@@ -22,7 +22,7 @@
       <tr *ngFor="let application of applicationList">
         <td>{{application.applicationNumber}}</td>
         <td>{{application.applicationType}}</td>
-        <td>{{application.amount}}</td>
+        <td>{{application.amount | currency}}</td>
         <td>{{application.status}}</td>
         <a [routerLink]="['/application', application.applicationNumber]">Details</a>
       </tr>

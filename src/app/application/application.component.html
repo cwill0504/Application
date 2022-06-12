@@ -59,7 +59,7 @@
             Amount is required.
           </div>
           <div *ngIf="amount.errors?.['pattern']">
-            Amount must be larger than 1000.
+            Amount must be larger than 1000. Up to 2 decimal places.
           </div>
         </div>
       </div>
@@ -98,11 +98,13 @@
           <td>{{applicant.gender}}</td>
           <td>
             <!-- Existing Applicant Action Buttons -->
-            <div *ngIf="applicationMode == 'new' || applicationMode == 'edit'">
-              <button type="button" class="btn btn-primary btn-sm mt-2" style="color: white; background-color: blue;"
-                (click)="editApplicant(applicantIndex)">Edit</button>
-              <button type="button" class="btn btn-danger btn-sm mt-2"
-                (click)="deleteApplicant(applicantIndex)">Delete</button>
+            <div class="tableButton">
+              <div *ngIf="applicationMode == 'new' || applicationMode == 'edit'">
+                <button type="button" class="btn btn-danger btn-sm mt-2"
+                  (click)="editApplicant(applicantIndex)">Edit</button>
+                <button type="button" class="btn btn-danger btn-sm mt-2"
+                  (click)="deleteApplicant(applicantIndex)">Delete</button>
+              </div>
             </div>
           </td>
         </tr>
@@ -126,9 +128,20 @@
       </div>
 
       <!-- Identification Type -->
-      <identification-types [identificationTypes]='identificationTypes'
+      <identification-types [identificationTypes]='identificationTypeOptions'
         [selectedIdentificationTypes]="formValue.get('identificationTypes')?.value"
         (identificationTypesChanged)="onIdentificationTypesChanged($event)"></identification-types>
+        <h1>{{identificationTypes.errors?.['notvalid']}}</h1>
+      <div *ngIf="(identificationTypes.errors?.['minimum'] || identificationTypes.errors?.['maximum'])">
+        <div class="alert alert-danger">
+          <div *ngIf="identificationTypes.errors?.['minimum']">
+            Identification Type is required.
+          </div>
+          <div *ngIf="identificationTypes.errors?.['maximum']">
+            Maximum 2 Identification Types can be selected.
+          </div>
+        </div>
+      </div>
       <!-- <label for="identificationType">Identification Type:</label>
       <div *ngFor="let identificationType of identificationTypes; let i = index" formArrayName="identificationTypes"
         style="display:inline">

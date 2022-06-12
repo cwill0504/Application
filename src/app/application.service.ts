@@ -14,8 +14,8 @@ export class ApplicationService {
   getApplicationList() {
     let applications = this.retrieveFromStorage();
     if (applications == null) {
-      localStorage.setItem(DATA_KEY, JSON.stringify(APPLICATION_LIST_INITIAL_DATA));
-      localStorage.setItem(APPNUMBER_KEY, "2003");
+      sessionStorage.setItem(DATA_KEY, JSON.stringify(APPLICATION_LIST_INITIAL_DATA));
+      sessionStorage.setItem(APPNUMBER_KEY, "2003");
       applications = this.retrieveFromStorage();
     }
     return applications;
@@ -92,11 +92,11 @@ export class ApplicationService {
 
   
   private saveToStorage(applications: Application[]) {
-  localStorage.setItem(DATA_KEY, JSON.stringify(applications));
+  sessionStorage.setItem(DATA_KEY, JSON.stringify(applications));
 }
 
   private retrieveFromStorage() {
-  var data = localStorage.getItem(DATA_KEY);
+  var data = sessionStorage.getItem(DATA_KEY);
   if (data != null) {
     return <Application[]>JSON.parse(data);
   }
@@ -105,10 +105,10 @@ export class ApplicationService {
   }
 }
 private generateNewApplicationNumber(){
-  let applicationNumber = Number(localStorage.getItem(APPNUMBER_KEY));
+  let applicationNumber = Number(sessionStorage.getItem(APPNUMBER_KEY));
   if (applicationNumber != null){
     applicationNumber++;
-    localStorage.setItem(APPNUMBER_KEY, applicationNumber.toString())
+    sessionStorage.setItem(APPNUMBER_KEY, applicationNumber.toString())
     return applicationNumber;
   }
   else{

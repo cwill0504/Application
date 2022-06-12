@@ -1,9 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ApplicationService } from '../application.service';
 import { ActivatedRoute } from '@angular/router';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Applicant, Application } from '../model/application';
 import { Router } from '@angular/router';
+import { createIdentificationTypesValidator } from '../validator/identification-type-validator/identification-type-validator.component';
 
 @Component({
   selector: 'app-application',
@@ -23,20 +24,24 @@ export class ApplicationComponent implements OnInit {
   };
   applicationNumber?: string | null;
   editApplicantIndex = -1;
-  identificationTypes = ["Australian Passport", "Driver Licence", "Foreign Passport", "Foreign ID Card"]
+  identificationTypeOptions = ["Australian Passport", "Driver Licence", "Foreign Passport", "Foreign ID Card"]
 
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private applicationService: ApplicationService, private router: Router) { }
 
   ngOnInit(): void {
     this.formValue = this.formBuilder.group({
       applicationType: [null, [Validators.required]],
-      amount: [null, [Validators.required, Validators.pattern('([0-9]{4,})')]],
+      amount: [null, [Validators.required, Validators.pattern('((^[1-9][0-9]{3,}$)|(^[0-9]*\.[0-9]{1,2}$))')]],
       status: [null, [Validators.required]],
       name: [null, [Validators.required, Validators.pattern('[a-zA-Z ]+')]],
-      identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
+      identificationTypes: this.formBuilder.array(this.identificationTypeOptions.map(x => false), [createIdentificationTypesValidator()]),
       gender: [null, [Validators.required]]
     })
     this.initialise(this.formValue);
+  }
+
+  get identificationTypes(): FormArray {
+    return this.formValue.get('identificationTypes') as FormArray;
   }
 
   get applicationType() {
@@ -148,8 +153,8 @@ export class ApplicationComponent implements OnInit {
 
     let types = [];
 
-    for (let i = 0; i < this.identificationTypes.length; i++) {
-      types.push(editApplicant.identificationTypes.find(type => type == this.identificationTypes[i]) != null);
+    for (let i = 0; i < this.identificationTypeOptions.length; i++) {
+      types.push(editApplicant.identificationTypes.find(type => type == this.identificationTypeOptions[i]) != null);
     }
 
     this.formValue.controls['identificationTypes'].setValue(types);
@@ -211,9 +216,9 @@ export class ApplicationComponent implements OnInit {
     }
 
     if (applicant.name && applicant.gender) {
-      for (let i = 0; i < this.identificationTypes.length; i++) {
+      for (let i = 0; i < this.identificationTypeOptions.length; i++) {
         if (this.formValue.value["identificationTypes"][i]) {
-          applicant.identificationTypes.push(this.identificationTypes[i])
+          applicant.identificationTypes.push(this.identificationTypeOptions[i])
         }
       }
     }

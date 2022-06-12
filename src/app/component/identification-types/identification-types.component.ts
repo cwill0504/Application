@@ -7,7 +7,6 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
   styleUrls: ['./identification-types.component.css']
 })
 
-
 export class IdentificationTypesComponent implements OnInit{
    @Input()
    identificationTypes: string[] = []
@@ -29,4 +28,5 @@ export class IdentificationTypesComponent implements OnInit{
 
     this.identificationTypesChanged.emit(this.selectedIdentificationTypes);
   }
+
 }
