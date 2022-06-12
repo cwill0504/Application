@@ -13,11 +13,17 @@ export class ApplicationService {
 
   getApplicationList() {
     let applications = this.retrieveFromStorage();
+
     if (applications == null) {
       sessionStorage.setItem(DATA_KEY, JSON.stringify(APPLICATION_LIST_INITIAL_DATA));
       sessionStorage.setItem(APPNUMBER_KEY, "2003");
       applications = this.retrieveFromStorage();
     }
+
+    if (!applications) {
+      applications = [];
+    } 
+
     return applications;
   }
 

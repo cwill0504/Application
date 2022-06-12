@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { ActivatedRoute } from '@angular/router'
 import { ApplicationService } from '../application.service';
 import { Application } from '../model/application';
 
@@ -10,19 +8,17 @@ import { Application } from '../model/application';
   styleUrls: ['./main.component.css']
 })
 
-export class MainComponent{
-  title = 'Applications';
-  //application = [{"applicationNumber":1,"applicationType":"Home Loan","amount":500000,"status":"Active","applicants":[{"name":"William Chau","identificationType":["Australian Passport","Driver Licence"],"gender":"Male"},{"name":"Irene Chau","idType":["Foreign Passport"],"gender":"Female"}]},{"applicationNumber":2,"applicationType":"Personal Loan","amount":12500,"status":"Inactive","applicants":[{"name":"Brown Smith","identificationType":["Foreign ID Card"],"gender":"Not Disclosed"}]},{"applicationNumber":3,"applicationType":"Business Loan","amount":120000,"status":"Active","applicants":[{"name":"Melissa Cocombe","identificationType":["Australian Passport"],"gender":"Female"},{"name":"Michael Cocombe","identificationType":["Driver Licence","Foreign Passport"],"gender":"Female"}]}]
-  applicationList ?: Application[] | null;
+export class MainComponent implements OnInit {
+  applicationList: Application[] = [];
 
-  constructor(private router: Router, private route: ActivatedRoute, private applicationService: ApplicationService) { 
-    this.init()
+  constructor(private applicationService: ApplicationService) {
   }
-  
 
-  init() {
+  ngOnInit(): void {
+    this.initialise()
+  }
+
+  initialise() {
     this.applicationList = this.applicationService.getApplicationList();
   }
-
- 
 }
