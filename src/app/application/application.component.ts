@@ -138,7 +138,6 @@ export class ApplicationComponent implements OnInit {
     }
   }
 
-
   /*
   *=========================================
   * Applicant management
@@ -150,10 +149,16 @@ export class ApplicationComponent implements OnInit {
   }
 
   addApplicant() {
-    this.application.applicants.push(this.getApplicantFromForm());
-    this.applicantMode = 'read';
-    //this.resetApplicantForm();
-    this.disableApplicantFormValidators();
+    let newApplicant = this.getApplicantFromForm();
+
+    if (this.isNewApplicantNameDuplicate(newApplicant.name)) {
+      alert("Duplicate applicant name: " + newApplicant.name);
+    } else {
+      this.application.applicants.push(this.getApplicantFromForm());
+      this.applicantMode = 'read';
+      //this.resetApplicantForm();
+      this.disableApplicantFormValidators();
+    }
   }
 
   editApplicant(applicantIndex: number) {
@@ -178,16 +183,22 @@ export class ApplicationComponent implements OnInit {
   }
 
   updateApplicant(applicantIndex: number) {
-    this.application.applicants.splice(applicantIndex, 1, this.getApplicantFromForm())
-    this.applicantMode = 'read'
-    this.editApplicantIndex = -1;
-    //this.resetApplicantForm();
-    this.disableApplicantFormValidators();
+    let updateApplicant = this.getApplicantFromForm();
+
+    if (this.isUpdateApplicantNameDuplicate(applicantIndex, updateApplicant.name)) {
+      alert("Duplicate applicant name: " + updateApplicant.name);
+    } else {
+      this.application.applicants.splice(applicantIndex, 1, this.getApplicantFromForm())
+      this.applicantMode = 'read'
+      this.editApplicantIndex = -1;
+      //this.resetApplicantForm();
+      this.disableApplicantFormValidators();
+    }
   }
 
   deleteApplicant(applicantIndex: number) {
     if (confirm("Are you sure you wish to delete this applicant?")) {
-    this.application.applicants.splice(applicantIndex, 1);
+      this.application.applicants.splice(applicantIndex, 1);
     }
   }
 
@@ -237,6 +248,15 @@ export class ApplicationComponent implements OnInit {
       }
     }
 
-    return applicant
+    return applicant;
+  }
+
+  private isNewApplicantNameDuplicate(name: string) {
+    return this.application.applicants.find(applicant => applicant.name.trim().toLocaleLowerCase() == name.trim().toLowerCase());
+  }
+
+  private isUpdateApplicantNameDuplicate(applicantIndex: number, name: string) {
+    let matchedApplicantIndex = this.application.applicants.findIndex(applicant => applicant.name.trim().toLocaleLowerCase() == name.trim().toLowerCase());
+    return (matchedApplicantIndex == -1 ? false : matchedApplicantIndex != applicantIndex);
   }
 }
