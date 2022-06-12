@@ -1,0 +1,5 @@
+<label for="identificationType">Identification Type:</label>
+<div *ngFor="let identificationType of identificationTypes; let i = index" style="display:inline">
+  <input type="checkbox" class="btn-check" [checked]="selectedIdentificationTypes[i]" (change)="onChange(i, $event.target)" id="identificationTypes{{i}}">
+  <label class="btn btn-outline-success" for="identificationTypes{{i}}">{{identificationType}}</label>
+</div>

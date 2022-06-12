@@ -66,16 +66,19 @@
 
       <!-- Status -->
       <label for="status">Status:</label>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status" value="Active"
-          [checked]="application.status == 'Active'" [attr.disabled]="applicationMode == 'read'">
+      <fieldset [disabled]="applicationMode == 'read'">
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status" value="Active"
+            [checked]="application.status == 'Active'">
           <label class="form-check-label" for="inlineRadio1">Active</label>
-      </div>
-      <div class="form-check form-check-inline">
-        <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status" value="Inactive"
-          [checked]="application.status == 'Inactive'" [attr.disabled]="applicationMode == 'read'">
-        <label class="form-check-label" for="inlineRadio2">Inactive</label>
-      </div>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status"
+            value="Inactive" [checked]="application.status == 'Inactive'">
+          <label class="form-check-label" for="inlineRadio2">Inactive</label>
+        </div>
+      </fieldset>
+
     </div>
 
     <!-- Existing Applicant List -->
@@ -123,12 +126,15 @@
       </div>
 
       <!-- Identification Type -->
-      <label for="identificationType">Identification Type:</label>
+      <identification-types [identificationTypes]='identificationTypes'
+        [selectedIdentificationTypes]="formValue.get('identificationTypes')?.value"
+        (identificationTypesChanged)="onIdentificationTypesChanged($event)"></identification-types>
+      <!-- <label for="identificationType">Identification Type:</label>
       <div *ngFor="let identificationType of identificationTypes; let i = index" formArrayName="identificationTypes"
         style="display:inline">
         <input type="checkbox" class="btn-check" [formControlName]="i" id="option{{i}}">
         <label class="btn btn-outline-success" for="option{{i}}">{{identificationType}}</label>
-      </div>
+      </div> -->
 
       <!-- Gender -->
       <div>
@@ -164,13 +170,15 @@
     <div *ngIf="applicantMode == 'new' ">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add
         Applicant</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel Applicant</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel
+        Applicant</button>
 
     </div>
     <div *ngIf="applicantMode == 'edit'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2"
         (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel Applicant</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel
+        Applicant</button>
 
     </div>
 
@@ -180,7 +188,7 @@
     <div *ngIf="applicationMode == 'new'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="saveNewApplication()"
         [disabled]="!formValue.valid">Save Application</button>
-        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Cancel Application</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Cancel Application</button>
     </div>
 
     <div *ngIf="applicationMode == 'read'">
@@ -192,7 +200,7 @@
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" [disabled]="!formValue.valid"
         (click)="saveUpdatedApplication()">Save Application</button>
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Cancel Application</button>
-      
+
     </div>
   </form>
 </div>

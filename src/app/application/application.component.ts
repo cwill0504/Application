@@ -27,10 +27,6 @@ export class ApplicationComponent implements OnInit {
 
   constructor(private route: ActivatedRoute, private formBuilder: FormBuilder, private applicationService: ApplicationService, private router: Router) { }
 
-  // name: [null, [Validators.required, Validators.pattern('[a-zA-Z ]+')]],
-  // identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
-  // gender: [null, [Validators.required]]
-
   ngOnInit(): void {
     this.formValue = this.formBuilder.group({
       applicationType: [null, [Validators.required]],
@@ -113,9 +109,8 @@ export class ApplicationComponent implements OnInit {
       status: this.formValue.get('status')?.value,
       applicants: this.application.applicants
     };
-    let applicationNumber = this.applicationService.updateApplication(updatedApplication);
+    this.applicationService.updateApplication(updatedApplication);
     this.applicationMode = "read"
-    this.router.navigate(['/application/', applicationNumber]);
   }
 
   editApplication() {
@@ -182,6 +177,11 @@ export class ApplicationComponent implements OnInit {
     this.applicantMode = 'read'
     this.disableApplicantFormValidators();
     console.log("this.cancelApplicant")
+  }
+
+  onIdentificationTypesChanged(identificationTypes : boolean[]) {
+    console.log("Parent=" + identificationTypes)
+    this.formValue.controls['identificationTypes'].setValue(identificationTypes);
   }
   
   private enableApplicantFormValidators() {

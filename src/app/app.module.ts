@@ -9,6 +9,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ApplicationComponent } from './application/application.component';
 import { MainComponent } from './main/main.component';
+import { IdentificationTypesComponent } from './component/identification-types/identification-types.component';
 
 
 @NgModule({
@@ -16,6 +17,7 @@ import { MainComponent } from './main/main.component';
     AppComponent,
     ApplicationComponent,
     MainComponent,
+    IdentificationTypesComponent,
 
   ],
   imports: [
