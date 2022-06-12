@@ -1,5 +1,3 @@
-<h1>{{applicationMode}}</h1>
-<h1>{{applicantMode}}</h1>
 <nav class="navbar nav-light bg-primary">
   <div class="container-fluid">
     <div *ngIf="applicationMode == 'new'">
@@ -10,9 +8,6 @@
     </div>
     <div *ngIf="applicationMode == 'read'">
       <h1 style="color: aliceblue">View Application</h1>
-    </div>
-    <div class="d-flex">
-      <button type="button" class="btn btn-success" [routerLink]="'/main'">Return Home</button>
     </div>
   </div>
 </nav>
@@ -99,7 +94,7 @@
           <td>
             <!-- Existing Applicant Action Buttons -->
             <div class="tableButton">
-              <div *ngIf="applicationMode == 'new' || applicationMode == 'edit'">
+              <div *ngIf="(applicationMode == 'new' || applicationMode == 'edit') && applicantMode == 'read'">
                 <button type="button" class="btn btn-danger btn-sm mt-2"
                   (click)="editApplicant(applicantIndex)">Edit</button>
                 <button type="button" class="btn btn-danger btn-sm mt-2"
@@ -131,7 +126,7 @@
       <identification-types [identificationTypes]='identificationTypeOptions'
         [selectedIdentificationTypes]="formValue.get('identificationTypes')?.value"
         (identificationTypesChanged)="onIdentificationTypesChanged($event)"></identification-types>
-        <h1>{{identificationTypes.errors?.['notvalid']}}</h1>
+      <h1>{{identificationTypes.errors?.['notvalid']}}</h1>
       <div *ngIf="(identificationTypes.errors?.['minimum'] || identificationTypes.errors?.['maximum'])">
         <div class="alert alert-danger">
           <div *ngIf="identificationTypes.errors?.['minimum']">
@@ -201,7 +196,8 @@
     <div *ngIf="applicationMode == 'new'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="saveNewApplication()"
         [disabled]="!formValue.valid">Save Application</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Cancel Application</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplication()">Cancel
+        Application</button>
     </div>
 
     <div *ngIf="applicationMode == 'read'">
@@ -212,7 +208,8 @@
     <div *ngIf="applicationMode == 'edit'">
       <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" [disabled]="!formValue.valid"
         (click)="saveUpdatedApplication()">Save Application</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2">Cancel Application</button>
+      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplication()">Cancel
+        Application</button>
 
     </div>
   </form>

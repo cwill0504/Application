@@ -124,7 +124,18 @@ export class ApplicationComponent implements OnInit {
   }
 
   deleteApplication() {
-    this.applicationService.deleteApplication(Number(this.applicationNumber));
+    if (confirm("Are you sure you wish to delete Application Number:  " + this.applicationNumber + "?")) {
+      console.log("Implement delete functionality here");
+      this.applicationService.deleteApplication(Number(this.applicationNumber));
+      this.router.navigate(['main'])
+    }
+  }
+
+  cancelApplication() {
+    if (confirm("Are you sure you wish to cancel? Any inputs or updates will not be saved.")) {
+      console.log("Implement delete functionality here");
+      this.router.navigate(['main'])
+    }
   }
 
 
@@ -173,27 +184,30 @@ export class ApplicationComponent implements OnInit {
     //this.resetApplicantForm();
     this.disableApplicantFormValidators();
   }
-  
+
   deleteApplicant(applicantIndex: number) {
+    if (confirm("Are you sure you wish to delete this applicant?")) {
     this.application.applicants.splice(applicantIndex, 1);
+    }
   }
 
   cancelApplicant() {
-    this.applicantMode = 'read'
-    this.disableApplicantFormValidators();
-    console.log("this.cancelApplicant")
+    if (confirm("Are you sure you wish to cancel? Any inputs or updates will not be saved.")) {
+      this.applicantMode = 'read'
+      this.disableApplicantFormValidators();
+    }
   }
 
-  onIdentificationTypesChanged(identificationTypes : boolean[]) {
+  onIdentificationTypesChanged(identificationTypes: boolean[]) {
     console.log("Parent=" + identificationTypes)
     this.formValue.controls['identificationTypes'].setValue(identificationTypes);
   }
-  
+
   private enableApplicantFormValidators() {
-      // identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
-      this.formValue.controls['name'].setValidators([Validators.required,Validators.pattern('[a-zA-Z ]+')]);
-      // this.formValue.controls['identificationtypes'].setValidators(Validators.required);
-      this.formValue.controls['gender'].setValidators(Validators.required);
+    // identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
+    this.formValue.controls['name'].setValidators([Validators.required, Validators.pattern('[a-zA-Z ]+')]);
+    // this.formValue.controls['identificationtypes'].setValidators(Validators.required);
+    this.formValue.controls['gender'].setValidators(Validators.required);
   }
 
   private disableApplicantFormValidators() {
