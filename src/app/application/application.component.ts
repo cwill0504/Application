@@ -73,10 +73,15 @@ export class ApplicationComponent implements OnInit {
     if (this.applicationNumber != null) {
       // View application
       this.application = this.applicationService.getApplication(Number(this.applicationNumber));
-      formValue.controls['status'].setValue(this.application.status);
+      if (this.application.applicationNumber) {
+        formValue.controls['status'].setValue(this.application.status);
 
-      this.applicationMode = 'read';
-      this.applicantMode = 'read';
+        this.applicationMode = 'read';
+        this.applicantMode = 'read';
+      } else {
+        // Directs the user back to main page if URL contains invalid application number.
+        this.router.navigate(['main']);
+      }
     } else {
       // New application
       this.applicationMode = 'new';
