@@ -1,5 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ApplicationService } from '../application.service';
+/*
+ * Component for application form which allows add/edit/view/delete functionality.
+ */
+import { Component, OnInit } from '@angular/core';
+import { ApplicationService } from '../service/application.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Applicant, Application } from '../model/application';
@@ -66,21 +69,23 @@ export class ApplicationComponent implements OnInit {
 
   initialise(formValue: FormGroup) {
     this.applicationNumber = this.route.snapshot.paramMap.get('id');
-    console.log(this.applicationNumber)
 
     if (this.applicationNumber != null) {
       // View application
       this.application = this.applicationService.getApplication(Number(this.applicationNumber));
-      formValue.controls['status'].setValue(this.application.status);
-      // formValue.controls['status'].disable;
+      if (this.application.applicationNumber) {
+        formValue.controls['status'].setValue(this.application.status);
 
-      this.applicationMode = 'read';
-      this.applicantMode = 'read';
+        this.applicationMode = 'read';
+        this.applicantMode = 'read';
+      } else {
+        // Directs the user back to main page if URL contains invalid application number.
+        this.router.navigate(['main']);
+      }
     } else {
       // New application
       this.applicationMode = 'new';
       this.applicantMode = 'read';
-      // formValue.controls['status'].enable;
     }
 
     this.disableApplicantFormValidators();
@@ -106,7 +111,6 @@ export class ApplicationComponent implements OnInit {
   }
 
   saveUpdatedApplication() {
-    console.log(this.application)
     let updatedApplication: Application = {
       applicationNumber: this.application.applicationNumber,
       applicationType: this.formValue.get('applicationType')?.value,
@@ -120,12 +124,10 @@ export class ApplicationComponent implements OnInit {
 
   editApplication() {
     this.applicationMode = 'edit'
-    // this.applicantMode = 'read'
   }
 
   deleteApplication() {
     if (confirm("Are you sure you wish to delete Application Number:  " + this.applicationNumber + "?")) {
-      console.log("Implement delete functionality here");
       this.applicationService.deleteApplication(Number(this.applicationNumber));
       this.router.navigate(['main'])
     }
@@ -133,7 +135,6 @@ export class ApplicationComponent implements OnInit {
 
   cancelApplication() {
     if (confirm("Are you sure you wish to cancel? Any inputs or updates will not be saved.")) {
-      console.log("Implement delete functionality here");
       this.router.navigate(['main'])
     }
   }
@@ -156,7 +157,6 @@ export class ApplicationComponent implements OnInit {
     } else {
       this.application.applicants.push(this.getApplicantFromForm());
       this.applicantMode = 'read';
-      //this.resetApplicantForm();
       this.disableApplicantFormValidators();
     }
   }
@@ -164,7 +164,6 @@ export class ApplicationComponent implements OnInit {
   editApplicant(applicantIndex: number) {
     this.applicantMode = 'edit';
     let editApplicant = this.application.applicants[applicantIndex];
-    console.log(editApplicant);
     this.formValue.controls['name'].setValue(editApplicant.name);
 
     let types = [];
@@ -174,8 +173,6 @@ export class ApplicationComponent implements OnInit {
     }
 
     this.formValue.controls['identificationTypes'].setValue(types);
-
-    console.log(this.formValue.value['identificationTypes']);
 
     this.formValue.controls['gender'].setValue(editApplicant.gender);
     this.editApplicantIndex = applicantIndex;
@@ -191,7 +188,6 @@ export class ApplicationComponent implements OnInit {
       this.application.applicants.splice(applicantIndex, 1, this.getApplicantFromForm())
       this.applicantMode = 'read'
       this.editApplicantIndex = -1;
-      //this.resetApplicantForm();
       this.disableApplicantFormValidators();
     }
   }
@@ -209,28 +205,21 @@ export class ApplicationComponent implements OnInit {
     }
   }
 
+  /*
+   * Syncs selected/unselected identification types into the form.
+   */
   onIdentificationTypesChanged(identificationTypes: boolean[]) {
-    console.log("Parent=" + identificationTypes)
     this.formValue.controls['identificationTypes'].setValue(identificationTypes);
   }
 
   private enableApplicantFormValidators() {
-    // identificationTypes: this.formBuilder.array(this.identificationTypes.map(x => false), Validators.nullValidator),
     this.formValue.controls['name'].setValidators([Validators.required, Validators.pattern('[a-zA-Z ]+')]);
-    // this.formValue.controls['identificationtypes'].setValidators(Validators.required);
     this.formValue.controls['gender'].setValidators(Validators.required);
   }
 
   private disableApplicantFormValidators() {
     this.formValue.controls['name'].setValidators(Validators.nullValidator);
-    // this.formValue.controls['identificationtypes'].setValidators(Validators.nullValidator);
     this.formValue.controls['gender'].setValidators(Validators.nullValidator);
-  }
-
-  private resetApplicantForm() {
-    this.formValue.controls['name'].reset()
-    this.formValue.controls['identificationTypes'].reset();
-    this.formValue.controls['gender'].reset();
   }
 
   private getApplicantFromForm() {
