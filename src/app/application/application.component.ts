@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ApplicationService } from '../application.service';
+import { Component, OnInit } from '@angular/core';
+import { ApplicationService } from '../service/application.service';
 import { ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { Applicant, Application } from '../model/application';

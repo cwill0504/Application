@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
-import { Application } from './model/application';
-import defaultApplicationData from './default-application-data.json'
+import { Application } from '../model/application';
+import defaultApplicationData from '../default-application-data.json'
 
 const DEFAULT_LAST_APPLICATION_NUMBER = "2003"
 const LAST_APPLICATION_NUMBER_KEY = "LastApplicationNumber"

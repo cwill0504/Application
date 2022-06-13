@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ApplicationService } from './application.service';
-import { Application } from './model/application';
-import defaultApplicationData from './default-application-data.json'
+import { Application } from '../model/application';
+import defaultApplicationData from '../default-application-data.json'
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
