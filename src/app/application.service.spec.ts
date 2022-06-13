@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { ApplicationService } from './application.service';
 import { Application } from './model/application';
+import defaultApplicationData from './default-application-data.json'
 
 describe('ApplicationService', () => {
   let service: ApplicationService;
@@ -9,21 +10,21 @@ describe('ApplicationService', () => {
     TestBed.configureTestingModule({});
     service = TestBed.inject(ApplicationService);
 
-    const APPLICATION_TEST_DATA = [{ "applicationNumber": 2000, "applicationType": "Home Loan", "amount": 500000, "status": "Active", "applicants": [{ "name": "William Chau", "identificationTypes": ["Australian Passport", "Driver Licence"], "gender": "Male" }, { "name": "Irene Chau", "identificationTypes": ["Foreign Passport"], "gender": "Female" }] }, { "applicationNumber": 2001, "applicationType": "Personal Loan", "amount": 12500, "status": "Inactive", "applicants": [{ "name": "Brown Smith", "identificationTypes": ["Foreign ID Card"], "gender": "Not Disclosed" }] }, { "applicationNumber": 2003, "applicationType": "Business Loan", "amount": 120000, "status": "Active", "applicants": [{ "name": "Melissa Cocombe", "identificationTypes": ["Australian Passport"], "gender": "Female" }, { "name": "Michael Cocombe", "identificationTypes": ["Driver Licence", "Foreign Passport"], "gender": "Female" }] }]
-    let store = JSON.stringify(APPLICATION_TEST_DATA);
+    let store: {[key: string] : any} = {}
+    store['ApplicationListData'] = JSON.stringify(defaultApplicationData);
 
     const mockSessionStorage = {
       getItem: (key: string): string => {
-        return store;
+        return key in store ? store[key] : null;
       },
       setItem: (key: string, value: string) => {
-        store = value;
+        store[key] = `${value}`;
       },
       removeItem: (key: string) => {
-        store = "";
+        delete store[key];
       },
       clear: () => {
-        store = "";
+        store = {};
       }
     };
 

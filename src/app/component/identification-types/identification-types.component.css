@@ -1,0 +1,5 @@
+.btn-outline-success::after{
+    background-color: blue;
+    outline: none;
+  box-shadow: none;
+}

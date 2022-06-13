@@ -12,205 +12,216 @@
   </div>
 </nav>
 
-<div class="form">
-  <form [formGroup]="formValue">
-    <div class="form-group">
-      <div *ngIf="applicationMode != 'new'">
-        <label for="applicationNumber">Application Number:</label>
-        <input id="applicationNumber" type="number" class="form-control" value="{{application.applicationNumber}}"
-          [readonly]="applicationMode != 'new'">
-      </div>
-    </div>
-    <label for="applicationType">Application Type:</label>
-    <div class="radio">
-      <style>
-        select:invalid {
-          color: gray;
-        }
-      </style>
-      <select formControlName="applicationType" class="form-control" id="applicationType"
-        [attr.disabled]="applicationMode == 'read' ? 'disabled' : null">
-        <option value="">Please Select</option>
-        <option value="Home Loan" [selected]="application.applicationType == 'Home Loan'">Home Loan</option>
-        <option value="Personal Loan" [selected]="application.applicationType == 'Personal Loan'">Personal Loan</option>
-        <option value="Business Loan" [selected]="application.applicationType == 'Business Loan'">Business Loan</option>
-      </select>
-      <div *ngIf="applicationType">
-        <div *ngIf="applicationType.invalid && (applicationType.dirty || applicationType.touched)"
-          class="alert alert-danger">
-          <div *ngIf="applicationType.errors?.['required']">
-            Please select an application type.
-          </div>
+<div class="roundBorder">
+  <div class="form">
+    <form [formGroup]="formValue">
+      <div class="form-group">
+        <div *ngIf="applicationMode != 'new'">
+          <label for="applicationNumber">Application Number:</label>
+          <input id="applicationNumber" type="number" class="form-control" value="{{application.applicationNumber}}"
+            [readonly]="applicationMode != 'new'">
         </div>
       </div>
-
-      <!-- Amount -->
-      <label for="amount">Amount:</label>
-      <input id="amount" type="number" class="form-control" [readonly]="applicationMode == 'read'"
-        formControlName="amount">
-      <div *ngIf="amount">
-        <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
-          <div *ngIf="amount.errors?.['required']">
-            Amount is required.
-          </div>
-          <div *ngIf="amount.errors?.['pattern']">
-            Amount must be larger than 1000. Up to 2 decimal places.
-          </div>
-        </div>
-      </div>
-
-      <!-- Status -->
-      <label for="status">Status:</label>
-      <fieldset [disabled]="applicationMode == 'read'">
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status" value="Active"
-            [checked]="application.status == 'Active'">
-          <label class="form-check-label" for="inlineRadio1">Active</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status"
-            value="Inactive" [checked]="application.status == 'Inactive'">
-          <label class="form-check-label" for="inlineRadio2">Inactive</label>
-        </div>
-      </fieldset>
-
-    </div>
-
-    <!-- Existing Applicant List -->
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>ID Type</th>
-          <th>Gender</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr *ngFor="let applicant of application.applicants; let applicantIndex = index;">
-          <td>{{applicant.name}}</td>
-          <td>{{applicant.identificationTypes}}</td>
-          <td>{{applicant.gender}}</td>
-          <td>
-            <!-- Existing Applicant Action Buttons -->
-            <div class="tableButton">
-              <div *ngIf="(applicationMode == 'new' || applicationMode == 'edit') && applicantMode == 'read'">
-                <button type="button" class="btn btn-danger btn-sm mt-2"
-                  (click)="editApplicant(applicantIndex)">Edit</button>
-                <button type="button" class="btn btn-danger btn-sm mt-2"
-                  (click)="deleteApplicant(applicantIndex)">Delete</button>
+      <label for="applicationType">Application Type:</label>
+      <div class="radio">
+        <style>
+          select:invalid {
+            color: gray;
+          }
+        </style>
+        <div class="form-select">
+          <select formControlName="applicationType" class="form-control" id="applicationType"
+            [attr.disabled]="applicationMode == 'read' ? 'disabled' : null">
+            <option value="">Please Select</option>
+            <option value="Home Loan" [selected]="application.applicationType == 'Home Loan'">Home Loan</option>
+            <option value="Personal Loan" [selected]="application.applicationType == 'Personal Loan'">Personal Loan
+            </option>
+            <option value="Business Loan" [selected]="application.applicationType == 'Business Loan'">Business Loan
+            </option>
+          </select>
+          <div *ngIf="applicationType">
+            <div *ngIf="applicationType.invalid && (applicationType.dirty || applicationType.touched)"
+              class="alert alert-danger">
+              <div *ngIf="applicationType.errors?.['required']">
+                Please select an application type.
               </div>
             </div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-
-    <!-- Applicant New/Edit Entry -->
-    <div *ngIf="applicantMode != 'read'">
-      <!-- Name -->
-      <label for="name">Name:</label>
-      <input type="text" class="form-control" id="name" formControlName="name" />
-      <div *ngIf="name">
-        <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
-          <div *ngIf="name.errors?.['required']">
-            Name is required.
-          </div>
-          <div *ngIf="name.errors?.['pattern']">
-            Name must be in alphanumeric.
           </div>
         </div>
-      </div>
 
-      <!-- Identification Type -->
-      <identification-types [identificationTypes]='identificationTypeOptions'
-        [selectedIdentificationTypes]="formValue.get('identificationTypes')?.value"
-        (identificationTypesChanged)="onIdentificationTypesChanged($event)"></identification-types>
-      <h1>{{identificationTypes.errors?.['notvalid']}}</h1>
-      <div *ngIf="(identificationTypes.errors?.['minimum'] || identificationTypes.errors?.['maximum'])">
-        <div class="alert alert-danger">
-          <div *ngIf="identificationTypes.errors?.['minimum']">
-            Identification Type is required.
-          </div>
-          <div *ngIf="identificationTypes.errors?.['maximum']">
-            Maximum 2 Identification Types can be selected.
+
+        <!-- Amount -->
+        <label for="amount">Amount:</label>
+        <input id="amount" type="number" class="form-control" [readonly]="applicationMode == 'read'"
+          formControlName="amount">
+        <div *ngIf="amount">
+          <div *ngIf="amount.invalid && (amount.dirty || amount.touched)" class="alert alert-danger">
+            <div *ngIf="amount.errors?.['required']">
+              Amount is required.
+            </div>
+            <div *ngIf="amount.errors?.['pattern']">
+              Amount must be larger than 1000. Up to 2 decimal places.
+            </div>
           </div>
         </div>
+
+        <!-- Status -->
+        <label for="status">Status:</label>
+        <fieldset [disabled]="applicationMode == 'read'">
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="status" id="radio1" formControlName="status"
+              value="Active" [checked]="application.status == 'Active'">
+            <label class="form-check-label" for="inlineRadio1">Active</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="status" id="radio2" formControlName="status"
+              value="Inactive" [checked]="application.status == 'Inactive'">
+            <label class="form-check-label" for="inlineRadio2">Inactive</label>
+          </div>
+        </fieldset>
+
       </div>
-      <!-- <label for="identificationType">Identification Type:</label>
+
+      <!-- Existing Applicant List -->
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>ID Type</th>
+            <th>Gender</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let applicant of application.applicants; let applicantIndex = index;">
+            <td>{{applicant.name}}</td>
+            <td>{{applicant.identificationTypes}}</td>
+            <td>{{applicant.gender}}</td>
+            <td>
+              <!-- Existing Applicant Action Buttons -->
+              <div class="tableButton">
+                <div *ngIf="(applicationMode == 'new' || applicationMode == 'edit') && applicantMode == 'read'">
+                  <button type="button" class="btn btn-danger btn-sm mt-2"
+                    (click)="editApplicant(applicantIndex)">Edit</button>
+                  <button type="button" class="btn btn-danger btn-sm mt-2"
+                    (click)="deleteApplicant(applicantIndex)">Delete</button>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Applicant New/Edit Entry -->
+      <div *ngIf="applicantMode != 'read'">
+        <!-- Name -->
+        <label for="name">Name:</label>
+        <input type="text" class="form-control" id="name" formControlName="name" />
+        <div *ngIf="name">
+          <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert alert-danger">
+            <div *ngIf="name.errors?.['required']">
+              Name is required.
+            </div>
+            <div *ngIf="name.errors?.['pattern']">
+              Name must be in alphanumeric.
+            </div>
+          </div>
+        </div>
+
+        <!-- Identification Type -->
+        <identification-types [identificationTypes]='identificationTypeOptions'
+          [selectedIdentificationTypes]="formValue.get('identificationTypes')?.value"
+          (identificationTypesChanged)="onIdentificationTypesChanged($event)"></identification-types>
+        <h1>{{identificationTypes.errors?.['notvalid']}}</h1>
+        <div *ngIf="(identificationTypes.errors?.['minimum'] || identificationTypes.errors?.['maximum'])">
+          <div class="alert alert-danger">
+            <div *ngIf="identificationTypes.errors?.['minimum']">
+              Identification Type is required.
+            </div>
+            <div *ngIf="identificationTypes.errors?.['maximum']">
+              Maximum 2 Identification Types can be selected.
+            </div>
+          </div>
+        </div>
+        <!-- <label for="identificationType">Identification Type:</label>
       <div *ngFor="let identificationType of identificationTypes; let i = index" formArrayName="identificationTypes"
         style="display:inline">
         <input type="checkbox" class="btn-check" [formControlName]="i" id="option{{i}}">
         <label class="btn btn-outline-success" for="option{{i}}">{{identificationType}}</label>
       </div> -->
 
-      <!-- Gender -->
-      <div>
-        <label>Gender</label>
-        <style>
-          select:invalid {
-            color: gray;
-          }
-        </style>
+        <!-- Gender -->
         <div>
-          <select formControlName="gender" class="form-control">
-            <option value="">Please Select</option>
-            <option value="Male">Male</option>
-            <option value="Female">Female</option>
-            <option value="Not Disclosed">Not Disclosed</option>
-          </select>
-        </div>
-        <div *ngIf="gender">
-          <div *ngIf="gender.invalid && (gender.dirty || gender.touched)" class="alert alert-danger">
-            <div *ngIf="gender.errors?.['required']">
-              Please select a gender option.
+          <label>Gender</label>
+          <style>
+            select:invalid {
+              color: gray;
+            }
+          </style>
+          <div class="form-select">
+            <div>
+              <select formControlName="gender" class="form-control">
+                <option value="">Please Select</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Not Disclosed">Not Disclosed</option>
+              </select>
             </div>
+            <div *ngIf="gender">
+              <div *ngIf="gender.invalid && (gender.dirty || gender.touched)" class="alert alert-danger">
+                <div *ngIf="gender.errors?.['required']">
+                  Please select a gender option.
+                </div>
+              </div>
+            </div>
+
           </div>
+
         </div>
       </div>
-    </div>
 
-    <!-- Applicant Action Buttons -->
-    <div *ngIf="applicantMode == 'read'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="newApplicant()">New
-        Applicant</button>
-    </div>
-    <div *ngIf="applicantMode == 'new' ">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add
-        Applicant</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel
-        Applicant</button>
+      <!-- Applicant Action Buttons -->
+      <div *ngIf="applicantMode == 'read'">
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="newApplicant()">New
+          Applicant</button>
+      </div>
+      <div *ngIf="applicantMode == 'new' ">
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="addApplicant()">Add
+          Applicant</button>
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel
+          Applicant</button>
 
-    </div>
-    <div *ngIf="applicantMode == 'edit'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2"
-        (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel
-        Applicant</button>
+      </div>
+      <div *ngIf="applicantMode == 'edit'">
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2"
+          (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel
+          Applicant</button>
 
-    </div>
-
+      </div>
 
 
-    <!-- Application Action Buttons -->
-    <div *ngIf="applicationMode == 'new'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="saveNewApplication()"
-        [disabled]="!formValue.valid">Save Application</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplication()">Cancel
-        Application</button>
-    </div>
 
-    <div *ngIf="applicationMode == 'read'">
-      <button type="button" class="btn btn-danger btn-sm mt-2" (click)="editApplication()">Edit</button>
-      <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplication()">Delete</button>
-    </div>
+      <!-- Application Action Buttons -->
+      <div *ngIf="applicationMode == 'new'">
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="saveNewApplication()"
+          [disabled]="!formValue.valid">Save Application</button>
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplication()">Cancel
+          Application</button>
+      </div>
 
-    <div *ngIf="applicationMode == 'edit'">
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" [disabled]="!formValue.valid"
-        (click)="saveUpdatedApplication()">Save Application</button>
-      <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplication()">Cancel
-        Application</button>
+      <div *ngIf="applicationMode == 'read'">
+        <button type="button" class="btn btn-danger btn-sm mt-2" (click)="editApplication()">Edit</button>
+        <button type="button" class="btn btn-danger btn-sm mt-2" (click)="deleteApplication()">Delete</button>
+      </div>
 
-    </div>
-  </form>
+      <div *ngIf="applicationMode == 'edit'">
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" [disabled]="!formValue.valid"
+          (click)="saveUpdatedApplication()">Save Application</button>
+        <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplication()">Cancel
+          Application</button>
+
+      </div>
+    </form>
+  </div>
 </div>

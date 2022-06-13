@@ -1,9 +1,9 @@
 
-import { ApplicationInitStatus, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Application } from './model/application';
+import defaultApplicationData from './default-application-data.json'
 
-const APPLICATION_LIST_INITIAL_DATA = [{ "applicationNumber": 2000, "applicationType": "Home Loan", "amount": 500000, "status": "Active", "applicants": [{ "name": "William Chau", "identificationTypes": ["Australian Passport", "Driver Licence"], "gender": "Male" }, { "name": "Irene Chau", "identificationTypes": ["Foreign Passport"], "gender": "Female" }] }, { "applicationNumber": 2001, "applicationType": "Personal Loan", "amount": 12500, "status": "Inactive", "applicants": [{ "name": "Brown Smith", "identificationTypes": ["Foreign ID Card"], "gender": "Not Disclosed" }] }, { "applicationNumber": 2002, "applicationType": "Business Loan", "amount": 120000, "status": "Active", "applicants": [{ "name": "Melissa Cocombe", "identificationTypes": ["Australian Passport"], "gender": "Female" }, { "name": "Michael Cocombe", "identificationTypes": ["Driver Licence", "Foreign Passport"], "gender": "Female" }] }]
-const DEFAULT_LAST_APPLICATION_NUMBER = "2002"
+const DEFAULT_LAST_APPLICATION_NUMBER = "2003"
 const LAST_APPLICATION_NUMBER_KEY = "LastApplicationNumber"
 const DATA_KEY = "ApplicationListData"
 
@@ -13,10 +13,10 @@ const DATA_KEY = "ApplicationListData"
 })
 export class ApplicationService {
   getApplicationList() {
-    let applications = this.retrieveFromStorage();
+    let applications = this.retrieveFromStorage()
 
     if (applications == null) {
-      sessionStorage.setItem(DATA_KEY, JSON.stringify(APPLICATION_LIST_INITIAL_DATA));
+      sessionStorage.setItem(DATA_KEY, JSON.stringify(defaultApplicationData));
       sessionStorage.setItem(LAST_APPLICATION_NUMBER_KEY, DEFAULT_LAST_APPLICATION_NUMBER);
       applications = this.retrieveFromStorage();
     }
@@ -92,7 +92,7 @@ export class ApplicationService {
       return <Application[]>JSON.parse(data);
     }
     else {
-      return null
+      return null;
     }
   }
   private generateNewApplicationNumber() {

@@ -10,6 +10,7 @@ import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
 export class IdentificationTypesComponent implements OnInit{
    @Input()
    identificationTypes: string[] = []
+   
    @Input()
    selectedIdentificationTypes: boolean[] = []
 
@@ -19,8 +20,8 @@ export class IdentificationTypesComponent implements OnInit{
   }
 
   ngOnInit(): void {
-    console.log(this.selectedIdentificationTypes)
   }
+
   onChange(identificationTypePosition : number, event: any){
     let checkboxElement = <HTMLInputElement>event
 
@@ -28,5 +29,4 @@ export class IdentificationTypesComponent implements OnInit{
 
     this.identificationTypesChanged.emit(this.selectedIdentificationTypes);
   }
-
 }
