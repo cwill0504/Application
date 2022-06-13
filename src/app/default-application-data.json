@@ -6,7 +6,7 @@
         "status": "Active",
         "applicants": [
             {
-                "name": "William Chau",
+                "name": "Harvey Johnson",
                 "identificationTypes": [
                     "Australian Passport",
                     "Driver Licence"
@@ -14,7 +14,7 @@
                 "gender": "Male"
             },
             {
-                "name": "Irene Chau",
+                "name": "Stephanie Green",
                 "identificationTypes": [
                     "Foreign Passport"
                 ],
