@@ -79,7 +79,6 @@
             <label class="form-check-label" for="inlineRadio2">Inactive</label>
           </div>
         </fieldset>
-
       </div>
 
       <!-- Existing Applicant List -->
@@ -143,12 +142,6 @@
             </div>
           </div>
         </div>
-        <!-- <label for="identificationType">Identification Type:</label>
-      <div *ngFor="let identificationType of identificationTypes; let i = index" formArrayName="identificationTypes"
-        style="display:inline">
-        <input type="checkbox" class="btn-check" [formControlName]="i" id="option{{i}}">
-        <label class="btn btn-outline-success" for="option{{i}}">{{identificationType}}</label>
-      </div> -->
 
         <!-- Gender -->
         <div>
@@ -174,9 +167,7 @@
                 </div>
               </div>
             </div>
-
           </div>
-
         </div>
       </div>
 
@@ -197,7 +188,6 @@
           (click)="updateApplicant(editApplicantIndex)">Update Applicant</button>
         <button id="myButton" type="button" class="btn btn-danger btn-sm mt-2" (click)="cancelApplicant()">Cancel
           Applicant</button>
-
       </div>
 
 

@@ -1,13 +1,10 @@
-import { async, ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-
+import { ComponentFixture, TestBed, } from '@angular/core/testing';
 import { IdentificationTypesComponent } from './identification-types.component';
 
 describe('IdentificationTypesComponent', () => {
   let component: IdentificationTypesComponent;
   let fixture: ComponentFixture<IdentificationTypesComponent>;
-  let htmlInputElement: HTMLInputElement;
-  let event: Event;
+
 
   beforeEach(() => {
     fixture = TestBed.createComponent(IdentificationTypesComponent);

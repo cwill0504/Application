@@ -1,5 +1,10 @@
+/*
+ * Custom component to display identification types as a grouped checkbox.
+ * Parameters:
+ * 'identificationTypes' = Array of identification types to be displayed.
+ * 'selectedIdentificationTypes' = Array of boolean that corresponds to the chosen identification type. (true = Selected, false = Unselected)
+ */
 import { Component, Input, Output, EventEmitter, OnInit } from '@angular/core';
-
 
 @Component({
   selector: 'identification-types',

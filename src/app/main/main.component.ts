@@ -1,3 +1,7 @@
+/*
+ * Component for displaying list of applications.
+ */
+
 import { Component, OnInit } from '@angular/core';
 import { ApplicationService } from '../service/application.service';
 import { Application } from '../model/application';

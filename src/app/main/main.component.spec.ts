@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { MainComponent } from './main.component';
-import { Application } from '../model/application';
 
 describe('MainComponent', () => {
   let component: MainComponent;

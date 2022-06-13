@@ -1,3 +1,7 @@
+/*
+ * Service to manage the application list storage.
+ * This uses session storage for the exercise but the actual implementation should ideally interact with the backend system.
+ */
 
 import { Injectable } from '@angular/core';
 import { Application } from '../model/application';
@@ -7,11 +11,13 @@ const DEFAULT_LAST_APPLICATION_NUMBER = "2003"
 const LAST_APPLICATION_NUMBER_KEY = "LastApplicationNumber"
 const DATA_KEY = "ApplicationListData"
 
-
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationService {
+  /*
+   * This creates initial application test data in the session storage for 1st time if the data does not exist.
+   */
   getApplicationList() {
     let applications = this.retrieveFromStorage()
 
@@ -30,6 +36,7 @@ export class ApplicationService {
 
   getApplication(applicationNumber: number) {
     let applications = this.retrieveFromStorage();
+
     if (applications != null) {
       for (let i = 0; i < applications.length; i++) {
         let application = applications[i];
@@ -38,22 +45,25 @@ export class ApplicationService {
         }
       }
     }
+
     return <Application>{};
   }
 
   addApplication(application: Application) {
-    console.log(application)
     let applications = this.retrieveFromStorage();
+
     if (applications != null) {
       application.applicationNumber = this.generateNewApplicationNumber();
       applications.push(application);
       this.saveToStorage(applications);
     }
+
     return application.applicationNumber;
   }
 
   updateApplication(updatedApplication: Application) {
     let data = this.getApplicationList();
+
     if (data != null) {
       for (let i = 0; i < data.length; i++) {
         let application = data[i];
@@ -62,16 +72,18 @@ export class ApplicationService {
           break
         }
       }
-      console.log(data);
+
       this.saveToStorage(data);
     }
   }
 
   deleteApplication(applicationNumber: number) {
     let applications = this.retrieveFromStorage();
+
     if (applications != null) {
       for (let i = 0; i < applications.length; i++) {
         let application = applications[i];
+
         if (application.applicationNumber == applicationNumber) {
           applications.splice(i, 1);
           this.saveToStorage(applications);
@@ -80,7 +92,6 @@ export class ApplicationService {
       }
     }
   }
-
 
   private saveToStorage(applications: Application[]) {
     sessionStorage.setItem(DATA_KEY, JSON.stringify(applications));
@@ -95,8 +106,13 @@ export class ApplicationService {
       return null;
     }
   }
+
+  /*
+   * This should be taken care by the actual backend system as part of saving new application.
+   */
   private generateNewApplicationNumber() {
     let applicationNumber = Number(sessionStorage.getItem(LAST_APPLICATION_NUMBER_KEY));
+
     if (applicationNumber != null) {
       applicationNumber++;
       sessionStorage.setItem(LAST_APPLICATION_NUMBER_KEY, applicationNumber.toString())
